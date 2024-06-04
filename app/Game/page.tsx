@@ -72,7 +72,7 @@ export default function Game() {
             onChange={(e) => setBalance(Number(e.target.value))}
             value={balance}
             type="number"
-            label="Balance"
+            label="Balance (Baht)"
             InputProps={{
               className: "text-white"
             }}
@@ -86,7 +86,7 @@ export default function Game() {
             onChange={(e) => setBettingAmount(Number(e.target.value))}
             value={bettingAmount}
             type="number"
-            label="Betting Amount"
+            label="Betting Amount (Baht)"
             InputProps={{
               className: "text-white"
             }}
