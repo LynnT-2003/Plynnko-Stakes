@@ -8,7 +8,7 @@ export class BallManager {
     private canvasRef: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
     private obstacles: Obstacle[]
-    private sinks: Sink[]
+    public sinks: Sink[]
     private requestId?: number;
     private onFinish?: (index: number,startX?: number) => void;
 

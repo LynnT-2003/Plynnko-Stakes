@@ -47,7 +47,7 @@ export const Navbar = () => {
           </Button>
           <Button
             className="bg-transparent mx-4 hover:bg-black w-[50%]"
-            onClick={() => router.push("/game")}
+            onClick={() => router.push("/Game")}
           >
             Game
           </Button>
@@ -61,7 +61,7 @@ export const Navbar = () => {
           </Button>
           <Button
             className="bg-transparent mx-4 hover:bg-black"
-            onClick={() => router.push("/game")}
+            onClick={() => router.push("/Game")}
           >
             Game
           </Button>
