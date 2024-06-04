@@ -34,6 +34,7 @@ export default function Game() {
   const [ballManager, setBallManager] = useState<BallManager | null>(null);
   const [balance, setBalance] = useState(0);
   const [bettingAmount, setBettingAmount] = useState(0);
+  const [multiplier, setMultiplier] = useState(0);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -41,9 +42,16 @@ export default function Game() {
       const onFinish = (index: number, startX?: number) => {
         const sink = ballManager?.sinks[index];
         const multiplier = sink?.multiplier || 1;
-        setBalance(bettingAmount => {
-          const newBalance = bettingAmount * multiplier;
-          console.log(`Balance: ${newBalance}`);
+        setBalance(prevBalance => {
+          const amountWon = Math.round((bettingAmount * multiplier) * 100) / 100;
+          const newBalance = Math.round((prevBalance + amountWon) * 100) / 100;
+
+          console.log("Previous balance: ", prevBalance);
+          console.log("Landed on multiplier: ", multiplier);
+          console.log("Betting amount was: ", bettingAmount);
+          console.log("Adding to balance: ", amountWon);
+          console.log("Updated balance: ", newBalance);
+
           return newBalance;
         });
       };
@@ -51,34 +59,51 @@ export default function Game() {
       const ballManager = new BallManager(canvasRef.current, onFinish);
       setBallManager(ballManager);
     }
-  }, [canvasRef]);
+  }, [canvasRef, bettingAmount]);
 
   return (
     <div>
       <div className="flex justify-center items-center">
         <canvas ref={canvasRef} width="800" height="800"></canvas>
-        <div className="flex-col">
-          <Button variant="contained" color="success" onClick={() => {
-            const result = calculateGameResult();
-            if (ballManager) {
-              ballManager.addBall(result.point);
-            }
-            setBalance(balance - bettingAmount)
-          }}>Add ball</Button>
+        <div className="flex-col space-y-8">
+
           <TextField
             className="w-full"
             onChange={(e) => setBalance(Number(e.target.value))}
             value={balance}
             type="number"
             label="Balance"
+            InputProps={{
+              className: "text-white"
+            }}
+            InputLabelProps={{
+              className: "text-white"
+            }}
           />
+          
           <TextField
-            className="w-full"
+            className="w-full text-white"
             onChange={(e) => setBettingAmount(Number(e.target.value))}
             value={bettingAmount}
             type="number"
             label="Betting Amount"
+            InputProps={{
+              className: "text-white"
+            }}
+            InputLabelProps={{
+              className: "text-white"
+            }}
           />
+
+          <Button variant="contained" color="success" onClick={() => {
+            const result = calculateGameResult();
+            if (ballManager) {
+              ballManager.addBall(result.point);
+            }
+            setBalance(balance - bettingAmount)
+            console.log("Remaining amount after betting: ", balance)
+          }}>Add ball</Button>
+
         </div>
       </div>
     </div>
