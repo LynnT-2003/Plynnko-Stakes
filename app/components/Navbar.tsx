@@ -8,7 +8,7 @@ export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
   return (
-    <nav className="bg-white z-50 border-gray-200 bg-slate-800 borbder-b shadow-lg">
+    <nav className="bg-white z-50 border-gray-200 bg-black borbder-b shadow-lg">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <div
           onClick={() => router.push("/")}
