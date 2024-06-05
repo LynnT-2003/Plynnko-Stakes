@@ -8,7 +8,7 @@ export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
   return (
-    <nav className="bg-white z-50 border-gray-200 bg-black borbder-b shadow-lg">
+    <nav className="bg-white z-50 border-gray-200 bg-slate-900 borbder-b shadow-lg">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <div
           onClick={() => router.push("/")}
@@ -19,13 +19,13 @@ export const Navbar = () => {
             className="h-8"
             alt="plinkoo Logo"
           /> */}
-          <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+          <span className="self-center text-2xl font-semibold whitespace-nowrap text-white">
             Plynnko.TrustMeGuys
           </span>
         </div>
         <Button
           data-collapse-toggle="navbar-default"
-          className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm  rounded-lg md:hidden focus:outline-none focus:ring-2 dark:text-gray-400 dark:hover:bg-gray-200 dark:focus:ring-gray-600 bg-transparent"
+          className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm  rounded-lg md:hidden focus:outline-none focus:ring-2 text-gray-400 hover:bg-gray-200 focus:ring-gray-600 bg-transparent"
           onClick={() => {
             setIsMenuOpen(!isMenuOpen);
           }}
