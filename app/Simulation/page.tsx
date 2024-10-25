@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useEffect, useRef, useState } from "react";
 import { BallManager } from "../GameUtil/classes/BallManager";
 import { WIDTH } from "../GameUtil/constants";
@@ -58,8 +58,11 @@ export default function Simulation() {
   }, [canvasRef]);
 
   return (
-    <div className="flex justify-center items-center" style={{height:"90vh"}}>
-        <canvas ref={canvasRef} width="800" height="800"></canvas>
+    <div
+      className="flex justify-center items-center"
+      style={{ height: "90vh" }}
+    >
+      <canvas ref={canvasRef} width="800" height="800"></canvas>
     </div>
   );
 }
