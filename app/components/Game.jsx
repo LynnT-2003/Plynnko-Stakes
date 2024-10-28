@@ -382,9 +382,9 @@ const Game = () => {
   }, []);
 
   const handleMove = (noseTip) => {
-    const sensitivity = 10;
+    const sensitivity = window.innerWidth < 768 ? 3.15 : 2.5; // Adjust the sensitivity based on the screen size
 
-    basket.current.x = (noseTip[0] - 3 * basket.current.width) * sensitivity;
+    basket.current.x = (noseTip[0] - sensitivity * basket.current.width) * 10; // Using 10 as a multiplier for sensitivity
 
     const canvasWidth = canvasRef.current.width;
     basket.current.x = Math.max(
@@ -410,8 +410,7 @@ const Game = () => {
       {/* Fullscreen video background */}
       <video
         ref={videoRef}
-        style={{ display: "none" }}
-        className="absolute inset-0 object-cover w-full h-full z-0"
+        className="hidden md:block absolute inset-0 object-cover w-full h-full z-0"
       />
       <canvas
         ref={canvasRef}
