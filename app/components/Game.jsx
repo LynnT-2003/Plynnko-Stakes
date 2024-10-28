@@ -7,10 +7,20 @@ class Ball {
   constructor(x, y, radius, ctx) {
     this.x = x;
     this.y = y;
-    this.radius = 30;
+    this.radius = 90;
     this.ctx = ctx;
     this.image = new Image();
-    this.image.src = "/fries.png";
+
+    // Randomly select an image
+    const images = [
+      "/karina1.jpeg",
+      "/karina2.jpg",
+      "/karina3.jpeg",
+      "winter1.jpg",
+      "winter2.gif",
+      "winter3.jpg",
+    ];
+    this.image.src = images[Math.floor(Math.random() * images.length)];
   }
 
   draw() {
@@ -84,7 +94,7 @@ const Game = () => {
     const createBalls = setInterval(() => {
       const ball = new Ball(Math.random() * canvas.width, 0, 10, ctx);
       balls.current.push(ball);
-    }, 1000);
+    }, 4000);
 
     const update = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -176,7 +186,9 @@ const Game = () => {
       />
       <video ref={videoRef} style={{ display: "none" }}></video>{" "}
       {/* Hidden video element for hand tracking */}
-      <div className="mt-24 text-md font-bold">Fries Caught: {caughtCount}</div>
+      <div className="mt-24 text-md font-bold">
+        My Wives Caught Count: {caughtCount}
+      </div>
     </div>
   );
 };

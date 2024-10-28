@@ -19,7 +19,6 @@ export interface Sink {
   width: number;
   height: number;
   multiplier?: number;
-  isDragging?: boolean;
 }
 
 const MULTIPLIERS: { [key: number]: number } = {
@@ -44,7 +43,7 @@ const MULTIPLIERS: { [key: number]: number } = {
 
 export const createObstacles = (): Obstacle[] => {
   const obstacles: Obstacle[] = [];
-  const rows = 0;
+  const rows = 18;
   for (let row = 2; row < rows; row++) {
     const numObstacles = row + 1;
     const y = 0 + row * 35;
@@ -57,41 +56,18 @@ export const createObstacles = (): Obstacle[] => {
   return obstacles;
 };
 
-// export const createSinks = (): Sink[] => {
-//   const sinks = [];
-//   const SPACING = obstacleRadius * 2;
-
-//   for (let i = 0; i < NUM_SINKS; i++) {
-//     const x =
-//       WIDTH / 2 + sinkWidth * (i - Math.floor(NUM_SINKS / 2)) - SPACING * 1.5;
-//     const y = HEIGHT - 170;
-//     const width = sinkWidth;
-//     const height = width;
-//     sinks.push({ x, y, width, height, multiplier: MULTIPLIERS[i + 1] });
-//   }
-
-//   return sinks;
-// };
-
 export const createSinks = (): Sink[] => {
-  const sinks: Sink[] = [];
+  const sinks = [];
   const SPACING = obstacleRadius * 2;
 
-  const x = WIDTH / 2 - SPACING * 1.5;
-  const y = HEIGHT - 170;
-
-  // Increase sink width by multiplying the current sink width by, say, 1.5
-  const width = sinkWidth * 2;
-  const height = width * 0.8; // Keep the sink square, or change this value independently
-
-  sinks.push({
-    x,
-    y,
-    width,
-    height,
-    multiplier: MULTIPLIERS[1],
-    isDragging: false,
-  });
+  for (let i = 0; i < NUM_SINKS; i++) {
+    const x =
+      WIDTH / 2 + sinkWidth * (i - Math.floor(NUM_SINKS / 2)) - SPACING * 1.5;
+    const y = HEIGHT - 170;
+    const width = sinkWidth;
+    const height = width;
+    sinks.push({ x, y, width, height, multiplier: MULTIPLIERS[i + 1] });
+  }
 
   return sinks;
 };

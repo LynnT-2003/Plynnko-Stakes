@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { Button } from "./ui/Button";
 import { useRouter } from "next/navigation";
@@ -19,7 +19,7 @@ export const Navbar = () => {
             className="h-8"
             alt="plinkoo Logo"
           /> */}
-          <span className="self-center text-2xl font-semibold whitespace-nowrap text-white">
+          <span className="self-center text-2xl font-semibold whitespace-nowrap text-white hover:cursor-pointer">
             Plynnko.TrustMeGuys
           </span>
         </div>
@@ -36,14 +36,14 @@ export const Navbar = () => {
         <div
           className={`w-full lg:hidden flex flex-col md:w-auto items-center ${
             isMenuOpen ? "" : "hidden"
-          }`} 
+          }`}
           id="navbar-default"
         >
           <Button
             className="bg-transparent mx-4 hover:bg-black w-[50%]"
             onClick={() => router.push("/Simulation")}
           >
-            Simulation
+            Plynnko Demo
           </Button>
           <Button
             className="bg-transparent mx-4 hover:bg-black w-[50%]"
@@ -57,7 +57,7 @@ export const Navbar = () => {
             className="bg-transparent mx-4 hover:bg-black"
             onClick={() => router.push("/Simulation")}
           >
-            Simulation
+            Plynnko Demo
           </Button>
           <Button
             className="bg-transparent mx-4 hover:bg-black"

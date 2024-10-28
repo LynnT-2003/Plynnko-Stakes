@@ -10,17 +10,13 @@ import { pad, unpad } from "../padding";
 import { Ball } from "./Ball";
 
 export class BallManager {
-  balls: Ball[];
+  private balls: Ball[];
   private canvasRef: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
   private obstacles: Obstacle[];
   public sinks: Sink[];
   private requestId?: number;
   private onFinish?: (index: number, startX?: number) => void;
-  private isDraggingSink: boolean = false;
-  private dragOffsetX: number = 0;
-  private dragOffsetY: number = 0;
-
   constructor(
     canvasRef: HTMLCanvasElement,
     onFinish?: (index: number, startX?: number) => void
@@ -32,89 +28,11 @@ export class BallManager {
     this.sinks = createSinks();
     this.update();
     this.onFinish = onFinish;
-
-    this.initDragEvents();
   }
-
-  // Method to get the current position of the last ball added
-  getCurrentBallPosition() {
-    if (this.balls.length === 0) return null;
-    const lastBall = this.balls[this.balls.length - 1];
-    return { x: lastBall.x, y: lastBall.y }; // Assuming Ball class has x, y properties
-  }
-
-  isBallWithinSinkBounds(index: number) {
-    const ballPos = this.getCurrentBallPosition();
-    const sink = this.sinks[index];
-    if (!sink || !ballPos) return false;
-
-    // Basic overlap check for bounding box
-    return (
-      ballPos.x >= sink.x &&
-      ballPos.x <= sink.x + sink.width &&
-      ballPos.y >= sink.y &&
-      ballPos.y <= sink.y + sink.height
-    );
-  }
-
-  initDragEvents() {
-    this.canvasRef.addEventListener("mousedown", this.startDrag);
-    this.canvasRef.addEventListener("mousemove", this.dragSink);
-    this.canvasRef.addEventListener("mouseup", this.stopDrag);
-
-    this.canvasRef.addEventListener("touchstart", this.startDrag);
-    this.canvasRef.addEventListener("touchmove", this.dragSink);
-    this.canvasRef.addEventListener("touchend", this.stopDrag);
-  }
-
-  startDrag = (event: MouseEvent | TouchEvent) => {
-    const sink = this.sinks[0]; // Assuming we only drag the first sink
-    const { clientX, clientY } = "touches" in event ? event.touches[0] : event;
-    const rect = this.canvasRef.getBoundingClientRect();
-
-    // Adjust coordinates based on canvas position
-    const x = clientX - rect.left;
-    const y = clientY - rect.top;
-
-    // Check if the cursor is within the sink's bounds
-    if (
-      x >= sink.x &&
-      x <= sink.x + sink.width &&
-      y >= sink.y &&
-      y <= sink.y + sink.height
-    ) {
-      this.isDraggingSink = true;
-      this.dragOffsetX = x - sink.x;
-      this.dragOffsetY = y - sink.y;
-    }
-  };
-
-  dragSink = (event: MouseEvent | TouchEvent) => {
-    if (!this.isDraggingSink) return;
-
-    const { clientX, clientY } = "touches" in event ? event.touches[0] : event;
-    const rect = this.canvasRef.getBoundingClientRect();
-
-    // Adjust coordinates based on canvas position
-    const x = clientX - rect.left;
-    const y = clientY - rect.top;
-
-    // Update sink position based on drag
-    const sink = this.sinks[0];
-    sink.x = x - this.dragOffsetX;
-    sink.y = y - this.dragOffsetY;
-
-    // Redraw to update sink position
-    this.draw();
-  };
-
-  stopDrag = () => {
-    this.isDraggingSink = false;
-  };
 
   addBall(startX?: number) {
     const newBall = new Ball(
-      Math.random() * pad(WIDTH),
+      startX || pad(WIDTH / 2 + 13),
       pad(50),
       ballRadius,
       "red",
@@ -129,7 +47,6 @@ export class BallManager {
     );
     this.balls.push(newBall);
   }
-
   drawObstacles() {
     this.ctx.fillStyle = "white";
     this.obstacles.forEach((obstacle) => {
@@ -165,57 +82,27 @@ export class BallManager {
     return { background: "#7fff00", color: "black" };
   }
 
-  // drawSinks() {
-  //   this.ctx.fillStyle = "green";
-  //   const SPACING = obstacleRadius * 2;
-  //   for (let i = 0; i < this.sinks.length; i++) {
-  //     this.ctx.fillStyle = this.getColor(i).background;
-  //     const sink = this.sinks[i];
-  //     this.ctx.font = "normal 13px Arial";
-  //     this.ctx.fillRect(
-  //       sink.x,
-  //       sink.y - sink.height / 2,
-  //       sink.width - SPACING,
-  //       sink.height
-  //     );
-  //     this.ctx.fillStyle = this.getColor(i).color;
-  //     this.ctx.fillText(
-  //       sink?.multiplier?.toString() + "x",
-  //       sink.x - 15 + sinkWidth / 2,
-  //       sink.y
-  //     );
-  //   }
-  // }
   drawSinks() {
-    // Assume only one sink exists at index 0
-    const sink = this.sinks[0]; // Access the first sink
-
-    // Set color for the sink to orange
-    this.ctx.fillStyle = "orange"; // Set to orange
-
-    // Draw the sink as a rectangle
-    this.ctx.fillRect(
-      sink.x,
-      sink.y - sink.height / 2,
-      sink.width,
-      sink.height
-    );
-
-    // Set text properties for drawing text
-    this.ctx.fillStyle = "black"; // Text color
-    this.ctx.font = "16px Arial"; // Font size and style
-
-    // Measure text width for centering
-    const text = "basket";
-    const textWidth = this.ctx.measureText(text).width;
-
-    // Calculate x position for centered text
-    const textX = sink.x + (sink.width - textWidth) / 2;
-
-    // Draw the text "basket" centered inside the sink
-    this.ctx.fillText(text, textX, sink.y); // Positioning the text
+    this.ctx.fillStyle = "green";
+    const SPACING = obstacleRadius * 2;
+    for (let i = 0; i < this.sinks.length; i++) {
+      this.ctx.fillStyle = this.getColor(i).background;
+      const sink = this.sinks[i];
+      this.ctx.font = "normal 13px Arial";
+      this.ctx.fillRect(
+        sink.x,
+        sink.y - sink.height / 2,
+        sink.width - SPACING,
+        sink.height
+      );
+      this.ctx.fillStyle = this.getColor(i).color;
+      this.ctx.fillText(
+        sink?.multiplier?.toString() + "x",
+        sink.x - 15 + sinkWidth / 2,
+        sink.y
+      );
+    }
   }
-
   draw() {
     this.ctx.clearRect(0, 0, WIDTH, HEIGHT);
     this.drawObstacles();
@@ -243,11 +130,15 @@ export class BallManager {
       `Ball landed at sink ${index + 1} with multiplier ${sink.multiplier}x`
     );
 
-    const originalColor = this.ctx.fillStyle;
-    const highlightColor = "blue";
+    // Change sink color briefly
+    const originalColor = this.ctx.fillStyle; // Save original color
+    const highlightColor = "blue"; // Color to highlight sink
     const SPACING = obstacleRadius * 2;
 
+    // Change sink color to highlight color
     this.ctx.fillStyle = highlightColor;
+
+    // Redraw the sink with the highlight color
     this.ctx.fillRect(
       sink.x,
       sink.y - sink.height / 2,
@@ -255,6 +146,7 @@ export class BallManager {
       sink.height
     );
 
+    // Restore original color after a brief delay
     setTimeout(() => {
       this.ctx.fillStyle = originalColor;
       this.ctx.fillRect(
@@ -263,6 +155,6 @@ export class BallManager {
         sink.width - SPACING,
         sink.height
       );
-    }, 1000);
+    }, 1000); // Change the time duration as needed (in milliseconds)
   }
 }
