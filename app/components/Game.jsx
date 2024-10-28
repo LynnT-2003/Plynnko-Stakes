@@ -7,7 +7,7 @@ class Ball {
   constructor(x, y, radius, ctx) {
     this.x = x;
     this.y = y;
-    this.radius = 90;
+    this.radius = radius;
     this.ctx = ctx;
     this.image = new Image();
 
@@ -43,7 +43,7 @@ class Basket {
     this.x = x;
     this.y = y;
     this.width = width;
-    this.height = 100;
+    this.height = height;
     this.ctx = ctx;
     this.image = new Image();
     this.image.src = "/basket.png";
@@ -67,17 +67,15 @@ const Game = () => {
   const canvasRef = useRef(null);
   const balls = useRef([]);
   const basket = useRef(null);
-  const videoRef = useRef(null); // Ref for video element
+  const videoRef = useRef(null);
   const [caughtCount, setCaughtCount] = useState(0);
 
   const handleMove = (indexFingerTip) => {
-    const sensitivity = 4; // Adjust this value for sensitivity
+    const sensitivity = 4;
 
-    // Update basket position based on finger position
     basket.current.x =
       (indexFingerTip[0] - basket.current.width / 2) * sensitivity;
 
-    // Keep basket within canvas bounds
     const canvasWidth = canvasRef.current.width;
     basket.current.x = Math.max(
       0,
@@ -89,10 +87,10 @@ const Game = () => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     const initialX = canvas.width / 2 - 50;
-    basket.current = new Basket(initialX, 400, 100, 20, ctx);
+    basket.current = new Basket(initialX, 400, 100, 100, ctx);
 
     const createBalls = setInterval(() => {
-      const ball = new Ball(Math.random() * canvas.width, 0, 10, ctx);
+      const ball = new Ball(Math.random() * canvas.width, 90, 90, ctx);
       balls.current.push(ball);
     }, 4000);
 
@@ -106,13 +104,11 @@ const Game = () => {
         ball.draw();
 
         if (basket.current.collidesWith(ball)) {
-          console.log("Ball caught!");
           setCaughtCount((prev) => prev + 1);
           balls.current.splice(i, 1);
         }
 
         if (ball.y > canvas.height) {
-          console.log("Ball missed!");
           balls.current.splice(i, 1);
         }
       }
@@ -122,17 +118,11 @@ const Game = () => {
 
     update();
 
-    // Initialize hand tracking
     const setupCamera = async () => {
       const video = videoRef.current;
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-      });
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
       video.srcObject = stream;
-
-      video.onloadedmetadata = () => {
-        video.play();
-      };
+      video.onloadedmetadata = () => video.play();
     };
 
     const loadHandposeModel = async () => {
@@ -147,8 +137,8 @@ const Game = () => {
         const predictions = await model.estimateHands(video);
         if (predictions.length > 0) {
           const hand = predictions[0];
-          const indexFingerTip = hand.landmarks[8]; // Get the tip of the index finger
-          handleMove(indexFingerTip); // Call the handleMove function
+          const indexFingerTip = hand.landmarks[8];
+          handleMove(indexFingerTip);
         }
         requestAnimationFrame(() => predictHandPosition(model));
       };
@@ -159,9 +149,7 @@ const Game = () => {
     setupCamera();
     loadHandposeModel();
 
-    return () => {
-      clearInterval(createBalls);
-    };
+    return () => clearInterval(createBalls);
   }, []);
 
   useEffect(() => {
@@ -184,8 +172,7 @@ const Game = () => {
         height={700}
         style={{ width: "80vw", height: "70vh" }}
       />
-      <video ref={videoRef} style={{ display: "none" }}></video>{" "}
-      {/* Hidden video element for hand tracking */}
+      <video ref={videoRef} style={{ display: "none" }}></video>
       <div className="mt-24 text-md font-bold">
         My Wives Caught Count: {caughtCount}
       </div>
