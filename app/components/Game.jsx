@@ -192,7 +192,7 @@ const Game = () => {
       {/* Display countdown if greater than 0 */}
       {countdown > 0 && (
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <p className="text-6xl text-red-500 font-bold">{countdown}</p>
+          <p className="text-6xl font-bold">{countdown}</p>
         </div>
       )}
     </div>
