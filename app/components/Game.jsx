@@ -410,7 +410,7 @@ const Game = () => {
       {/* Fullscreen video background */}
       <video
         ref={videoRef}
-        className="hidden md:block absolute inset-0 object-cover w-full h-full z-0"
+        className=" absolute inset-0 object-cover w-full h-full z-0"
       />
       <canvas
         ref={canvasRef}
