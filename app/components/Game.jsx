@@ -254,7 +254,7 @@ class Ball {
   }
 
   update() {
-    this.y += 3; // Speed of the falling ball
+    this.y += 6; // Speed of the falling ball
   }
 }
 
@@ -410,6 +410,7 @@ const Game = () => {
       {/* Fullscreen video background */}
       <video
         ref={videoRef}
+        style={{ display: "none" }}
         className="absolute inset-0 object-cover w-full h-full z-0"
       />
       <canvas
