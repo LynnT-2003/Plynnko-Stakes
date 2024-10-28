@@ -382,7 +382,7 @@ const Game = () => {
   }, []);
 
   const handleMove = (noseTip) => {
-    const sensitivity = window.innerWidth < 768 ? 3.15 : 2.5; // Adjust the sensitivity based on the screen size
+    const sensitivity = window.innerWidth < 768 ? 2 : 2.5; // Adjust the sensitivity based on the screen size
 
     basket.current.x = (noseTip[0] - sensitivity * basket.current.width) * 10; // Using 10 as a multiplier for sensitivity
 
