@@ -296,7 +296,7 @@ const Game = () => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     const initialX = canvas.width / 2 - 50;
-    basket.current = new Basket(initialX, 400, 100, 90, ctx);
+    basket.current = new Basket(initialX, canvas.height - 300, 100, 90, ctx);
 
     const countdownTimer = setInterval(() => {
       setCountdown((prev) => {
@@ -314,7 +314,7 @@ const Game = () => {
         const ball = new Ball(Math.random() * canvas.width, 90, 80, ctx);
         balls.current.push(ball);
       }
-    }, 500); // Increase the frequency of ball creation
+    }, 1000); // Increase the frequency of ball creation
 
     // Clear intervals on component unmount
     return () => {
