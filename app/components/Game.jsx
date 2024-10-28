@@ -90,10 +90,16 @@ const Game = () => {
     const initialX = canvas.width / 2 - 50;
     basket.current = new Basket(initialX, 400, 100, 100, ctx);
 
-    const createBalls = setInterval(() => {
-      const ball = new Ball(Math.random() * canvas.width, 90, 90, ctx);
-      balls.current.push(ball);
-    }, 1000);
+    // Delay ball creation by 5 seconds
+    const startCreatingBalls = setTimeout(() => {
+      const createBalls = setInterval(() => {
+        const ball = new Ball(Math.random() * canvas.width, 90, 90, ctx);
+        balls.current.push(ball);
+      }, 1000);
+
+      // Clear the interval on component unmount
+      return () => clearInterval(createBalls);
+    }, 5000); // 5000 ms = 5 seconds
 
     const update = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -150,7 +156,8 @@ const Game = () => {
     setupCamera();
     loadHandposeModel();
 
-    return () => clearInterval(createBalls);
+    // Clear timeout on component unmount
+    return () => clearTimeout(startCreatingBalls);
   }, []);
 
   useEffect(() => {
