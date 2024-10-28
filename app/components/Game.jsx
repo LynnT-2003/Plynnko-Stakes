@@ -12,15 +12,16 @@ class Ball {
     this.image = new Image();
 
     // Randomly select an image
-    const images = [
-      "/karina1.jpeg",
-      "/karina2.jpg",
-      "/karina3.jpeg",
-      "winter1.jpg",
-      "winter2.gif",
-      "winter3.jpg",
-    ];
-    this.image.src = images[Math.floor(Math.random() * images.length)];
+    // const images = [
+    //   "/karina1.jpeg",
+    //   "/karina2.jpg",
+    //   "/karina3.jpeg",
+    //   "winter1.jpg",
+    //   "winter2.gif",
+    //   "winter3.jpg",
+    // ];
+    // this.image.src = images[Math.floor(Math.random() * images.length)];
+    this.image.src = "/fries.png";
   }
 
   draw() {
@@ -34,7 +35,7 @@ class Ball {
   }
 
   update() {
-    this.y += 2;
+    this.y += 6;
   }
 }
 
@@ -92,7 +93,7 @@ const Game = () => {
     const createBalls = setInterval(() => {
       const ball = new Ball(Math.random() * canvas.width, 90, 90, ctx);
       balls.current.push(ball);
-    }, 4000);
+    }, 1000);
 
     const update = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);

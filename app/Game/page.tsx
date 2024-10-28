@@ -8,7 +8,7 @@ const App = () => {
   const [points, setPoints] = useState(0);
   const [finalPoints, setFinalPoints] = useState<number | null>(null);
   const [remainingTime, setRemainingTime] = useState(0);
-  const gameDuration = 10; // Duration in seconds
+  const gameDuration = 15; // Duration in seconds
   const pointsRef = useRef(points); // Ref to hold the latest points value
 
   useEffect(() => {
@@ -61,7 +61,6 @@ const App = () => {
         {gameStart && (
           <div className="w-screen h-full">
             <Game />
-            {/* Make sure to pass the handler to the Game component */}
           </div>
         )}
       </div>
