@@ -120,7 +120,15 @@ const Game = () => {
   useEffect(() => {
     const setupCamera = async () => {
       const video = videoRef.current;
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      // const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          width: { ideal: 640 }, // Set ideal width
+          height: { ideal: 360 }, // Set ideal height
+          // You can adjust the constraints further for quality/other requirements
+        },
+      });
       video.srcObject = stream;
       video.onloadedmetadata = () => video.play();
     };
@@ -179,20 +187,39 @@ const Game = () => {
 
   return (
     <div className="flex flex-col items-center justify-center h-[90vh] relative">
+      {/* Video to cover the entire background */}
+      <video
+        ref={videoRef}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover", // Ensures the video covers the entire area
+          zIndex: -1, // Send video behind other content
+        }}
+        autoPlay
+        muted
+      />
       <canvas
         ref={canvasRef}
         width={400}
         height={700}
-        style={{ width: "80vw", height: "70vh" }}
+        style={{
+          width: "80vw",
+          height: "70vh",
+          position: "relative",
+          zIndex: 1,
+        }} // Bring canvas to front
       />
-      <video ref={videoRef} style={{ display: "none" }}></video>
-      <div className="mt-24 text-md font-bold">
+      <div className="mt-24 text-md font-bold z-10">
         My Wives Caught Count: {caughtCount}
       </div>
       {/* Display countdown if greater than 0 */}
       {countdown > 0 && (
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <p className="text-6xl font-bold">{countdown}</p>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
+          <p className="text-6xl font-bold text-white">{countdown}</p>
         </div>
       )}
     </div>
