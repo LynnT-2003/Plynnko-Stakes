@@ -314,7 +314,7 @@ const Game = () => {
         const ball = new Ball(Math.random() * canvas.width, 90, 80, ctx);
         balls.current.push(ball);
       }
-    }, 1000); // Increase the frequency of ball creation
+    }, 3000); // Increase the frequency of ball creation
 
     // Clear intervals on component unmount
     return () => {
