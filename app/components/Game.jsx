@@ -10,18 +10,7 @@ class Ball {
     this.radius = radius;
     this.ctx = ctx;
     this.image = new Image();
-
-    // Randomly select an image
-    // const images = [
-    //   "/karina1.jpeg",
-    //   "/karina2.jpg",
-    //   "/karina3.jpeg",
-    //   "winter1.jpg",
-    //   "winter2.gif",
-    //   "winter3.jpg",
-    // ];
-    // this.image.src = images[Math.floor(Math.random() * images.length)];
-    this.image.src = "/fries.png";
+    this.image.src = "/fries.png"; // Change the image source as needed
   }
 
   draw() {
@@ -35,7 +24,7 @@ class Ball {
   }
 
   update() {
-    this.y += 6;
+    this.y += 6; // Speed of the falling ball
   }
 }
 
@@ -47,7 +36,7 @@ class Basket {
     this.height = height;
     this.ctx = ctx;
     this.image = new Image();
-    this.image.src = "/basket.png";
+    this.image.src = "/basket.png"; // Change the image source as needed
   }
 
   draw() {
@@ -70,19 +59,8 @@ const Game = () => {
   const basket = useRef(null);
   const videoRef = useRef(null);
   const [caughtCount, setCaughtCount] = useState(0);
-
-  const handleMove = (indexFingerTip) => {
-    const sensitivity = 4;
-
-    basket.current.x =
-      (indexFingerTip[0] - basket.current.width / 2) * sensitivity;
-
-    const canvasWidth = canvasRef.current.width;
-    basket.current.x = Math.max(
-      0,
-      Math.min(canvasWidth - basket.current.width, basket.current.x)
-    );
-  };
+  const [countdown, setCountdown] = useState(5); // Countdown state
+  const [gameStarted, setGameStarted] = useState(false); // State to track if game has started
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -90,41 +68,56 @@ const Game = () => {
     const initialX = canvas.width / 2 - 50;
     basket.current = new Basket(initialX, 400, 100, 100, ctx);
 
-    // Delay ball creation by 5 seconds
-    const startCreatingBalls = setTimeout(() => {
-      const createBalls = setInterval(() => {
+    const countdownTimer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev === 1) {
+          clearInterval(countdownTimer);
+          setGameStarted(true); // Start the game after countdown
+          return 0; // End countdown
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    // Ball creation will start after countdown
+    const createBalls = setInterval(() => {
+      if (gameStarted) {
         const ball = new Ball(Math.random() * canvas.width, 90, 90, ctx);
         balls.current.push(ball);
-      }, 1000);
+      }
+    }, 500); // Increase the frequency of ball creation
 
-      // Clear the interval on component unmount
-      return () => clearInterval(createBalls);
-    }, 5000); // 5000 ms = 5 seconds
+    // Clear intervals on component unmount
+    return () => {
+      clearInterval(countdownTimer);
+      clearInterval(createBalls);
+    };
+  }, [gameStarted]);
 
-    const update = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      basket.current.draw();
+  const update = () => {
+    const ctx = canvasRef.current.getContext("2d");
+    ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    basket.current.draw();
 
-      for (let i = balls.current.length - 1; i >= 0; i--) {
-        const ball = balls.current[i];
-        ball.update();
-        ball.draw();
+    for (let i = balls.current.length - 1; i >= 0; i--) {
+      const ball = balls.current[i];
+      ball.update();
+      ball.draw();
 
-        if (basket.current.collidesWith(ball)) {
-          setCaughtCount((prev) => prev + 1);
-          balls.current.splice(i, 1);
-        }
-
-        if (ball.y > canvas.height) {
-          balls.current.splice(i, 1);
-        }
+      if (basket.current.collidesWith(ball)) {
+        setCaughtCount((prev) => prev + 1);
+        balls.current.splice(i, 1);
       }
 
-      requestAnimationFrame(update);
-    };
+      if (ball.y > canvasRef.current.height) {
+        balls.current.splice(i, 1);
+      }
+    }
 
-    update();
+    requestAnimationFrame(update);
+  };
 
+  useEffect(() => {
     const setupCamera = async () => {
       const video = videoRef.current;
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -156,9 +149,21 @@ const Game = () => {
     setupCamera();
     loadHandposeModel();
 
-    // Clear timeout on component unmount
-    return () => clearTimeout(startCreatingBalls);
+    update();
   }, []);
+
+  const handleMove = (indexFingerTip) => {
+    const sensitivity = 4;
+
+    basket.current.x =
+      (indexFingerTip[0] - basket.current.width / 2) * sensitivity;
+
+    const canvasWidth = canvasRef.current.width;
+    basket.current.x = Math.max(
+      0,
+      Math.min(canvasWidth - basket.current.width, basket.current.x)
+    );
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -184,6 +189,10 @@ const Game = () => {
       <div className="mt-24 text-md font-bold">
         My Wives Caught Count: {caughtCount}
       </div>
+      {/* Display countdown if greater than 0 */}
+      {countdown > 0 && (
+        <div className="absolute text-6xl font-bold">{countdown}</div>
+      )}
     </div>
   );
 };

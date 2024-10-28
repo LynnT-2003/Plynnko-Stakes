@@ -8,11 +8,11 @@ const App = () => {
   const [points, setPoints] = useState(0);
   const [finalPoints, setFinalPoints] = useState<number | null>(null);
   const [remainingTime, setRemainingTime] = useState(0);
-  const gameDuration = 15; // Duration in seconds
-  const pointsRef = useRef(points); // Ref to hold the latest points value
+  const gameDuration = 15;
+  const pointsRef = useRef(points);
 
   useEffect(() => {
-    pointsRef.current = points; // Update ref whenever points change
+    pointsRef.current = points;
   }, [points]);
 
   useEffect(() => {
@@ -20,31 +20,31 @@ const App = () => {
     let countdown: NodeJS.Timeout | undefined;
 
     if (gameStart) {
-      setRemainingTime(gameDuration); // Initialize remaining time
+      setRemainingTime(gameDuration);
       countdown = setInterval(() => {
         setRemainingTime((prev) => {
           if (prev <= 1) {
             clearInterval(countdown);
-            return 0; // Stop countdown
+            return 0;
           }
-          return prev - 1; // Decrement remaining time
+          return prev - 1;
         });
-      }, 1000); // Update every second
+      }, 1000);
 
       timer = setTimeout(() => {
-        setGameStart(false); // End game after 10 seconds
-        setFinalPoints(pointsRef.current); // Use the latest points value from ref
+        setGameStart(false);
+        setFinalPoints(pointsRef.current);
       }, gameDuration * 1000);
     }
 
     return () => {
-      if (timer) clearTimeout(timer); // Cleanup timer
-      if (countdown) clearInterval(countdown); // Cleanup countdown
+      if (timer) clearTimeout(timer);
+      if (countdown) clearInterval(countdown);
     };
   }, [gameStart]);
 
   const handlePointsUpdate = (newPoints: React.SetStateAction<number>) => {
-    setPoints(newPoints); // Update points from Game component
+    setPoints(newPoints);
   };
 
   return (
