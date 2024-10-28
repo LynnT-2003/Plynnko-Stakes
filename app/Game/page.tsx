@@ -8,7 +8,7 @@ const App = () => {
   const [points, setPoints] = useState(0);
   const [finalPoints, setFinalPoints] = useState<number | null>(null);
   const [remainingTime, setRemainingTime] = useState(0);
-  const gameDuration = 15;
+  const gameDuration = 25;
   const pointsRef = useRef(points);
 
   useEffect(() => {
@@ -59,7 +59,7 @@ const App = () => {
           </Button>
         )}
         {gameStart && (
-          <div className="w-screen h-full">
+          <div className="w-screen h-full z-0">
             <Game />
           </div>
         )}
@@ -72,7 +72,7 @@ const App = () => {
       )}
 
       {gameStart && (
-        <div className="text-center mt-4">
+        <div className="text-center mt-4 z-10">
           <p>Time Remaining: {remainingTime} seconds</p>
         </div>
       )}
